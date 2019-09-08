@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\UserGroup;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Group controller.
  * @Route("/api", name="api_")
  */
-class GroupController extends AbstractController
+class UserGroupController extends FOSRestController
 {
 //    /**
 //     * @Route("/group", name="group")
@@ -20,7 +20,7 @@ class GroupController extends AbstractController
 //    public function index()
 //    {
 //        return $this->render('group/index.html.twig', [
-//            'controller_name' => 'GroupController',
+//            'controller_name' => 'UserGroupController',
 //        ]);
 //    }
 
