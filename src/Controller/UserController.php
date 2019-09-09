@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use App\Entity\User;
+use function Sodium\add;
 
 /**
  * User controller.
@@ -30,7 +31,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * Create User.
+     * As an admin I can add users. A user has a name.
      * @Rest\Post("/user")
      *
      * @param Request $request
@@ -55,7 +56,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * Delete User.
+     * As an admin I can delete users.
      * @Rest\Delete("/user")
      *
      * @param Request $request
@@ -78,5 +79,41 @@ class UserController extends FOSRestController
 
         // might return some othe indication when not found
         return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * As an admin I can assign users to a group they aren’t already part of.
+     * @Rest\Post("/usergroup")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    // PATCH didn't work so for now using POST
+    public function postUsergroupAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
+
+        $data = json_decode($request->getContent(), true);
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->find($data['id']);
+
+        if (!$user) {
+            // no such user
+            return $this->handleView($this->view(['status' => 'ok1'], Response::HTTP_CREATED));
+        }
+
+        if(in_array($data['group'], $user->getGroups())) {
+            // already part of group
+            return $this->handleView($this->view(['status' => 'ok2'], Response::HTTP_CREATED));
+        }
+
+        $groupsArray[] = $user->getGroups();
+        array_merge($groupsArray, array($data['group']));
+        $user->setGroups($groupsArray);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->handleView($this->view(['status' =>  'ok3'], Response::HTTP_CREATED));
     }
 }

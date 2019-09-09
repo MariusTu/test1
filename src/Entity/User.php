@@ -33,9 +33,9 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
-    private $groupId;
+    private $groups = [];
 
     public function getId(): ?int
     {
@@ -115,14 +115,17 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGroupId(): ?int
+    public function getGroups(): array
     {
-        return $this->groupId;
+        $groups = $this->groups;
+        $groups[] = 'GROUP_NONE';
+
+        return array_unique($groups[0]);
     }
 
-    public function setGroupId(?int $groupId): self
+    public function setGroups(array $groups): self
     {
-        $this->groupId = $groupId;
+        $this->groups = $groups;
 
         return $this;
     }

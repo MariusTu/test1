@@ -14,18 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserGroupController extends FOSRestController
 {
-//    /**
-//     * @Route("/group", name="group")
-//     */
-//    public function index()
-//    {
-//        return $this->render('group/index.html.twig', [
-//            'controller_name' => 'UserGroupController',
-//        ]);
-//    }
-
     /**
-     * Create Group.
+     * As an admin I can create groups.
      * @Rest\Post("/group")
      *
      * @param Request $request
